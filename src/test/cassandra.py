@@ -85,8 +85,10 @@ class Cassandra(object):
         return self
 
     def __exit__(self, *args):
-        self.stop()
-        self.cleanup()
+        import os
+        if self.pid and self._owner_pid == os.getpid():
+            self.stop()
+            self.cleanup()
 
     def cleanup(self):
         from shutil import rmtree
@@ -170,10 +172,13 @@ class Cassandra(object):
             conn.close()
 
     def stop(self, _signal=signal.SIGTERM):
+        import os
         if self.pid is None:
             return  # not started
 
-        import os
+        if self._owner_pid != os.getpid():
+            return  # could not stop in child process
+
         try:
             os.kill(self.pid, _signal)
             while (os.waitpid(self.pid, 0)):
