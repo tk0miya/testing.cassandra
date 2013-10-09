@@ -15,29 +15,29 @@ classifiers = [
 
 
 setup(
-     name='test.cassandra',
-     version='0.1.0',
-     description='automatically setups a cassandra instance in a temporary directory, and destroys it after testing',
-     long_description='',
-     classifiers=classifiers,
-     keywords=[],
-     author='Takeshi Komiya',
-     author_email='i.tkomiya at gmail.com',
-     url='http://bitbucket.org/tk0miya/test.cassandra',
-     license='Apache License 2.0',
-     packages=find_packages('src'),
-     package_dir={'': 'src'},
-     package_data = {'': ['buildout.cfg']},
-     include_package_data=True,
-     install_requires=[
-         'pycassa',
-         'PyYAML',
-     ],
-     extras_require=dict(
-         test=[
-             'mock',
-             'nose',
-         ],
-     ),
-     test_suite='nose.collector',
+    name='test.cassandra',
+    version='0.1.0',
+    description='automatically setups a cassandra instance in a temporary directory, and destroys it after testing',
+    long_description='',
+    classifiers=classifiers,
+    keywords=[],
+    author='Takeshi Komiya',
+    author_email='i.tkomiya at gmail.com',
+    url='http://bitbucket.org/tk0miya/test.cassandra',
+    license='Apache License 2.0',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    package_data={'': ['buildout.cfg']},
+    include_package_data=True,
+    install_requires=[
+        'pycassa',
+        'PyYAML',
+    ],
+    extras_require=dict(
+        test=[
+            'mock',
+            'nose',
+        ],
+    ),
+    test_suite='nose.collector',
 )

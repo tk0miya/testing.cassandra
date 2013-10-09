@@ -157,7 +157,7 @@ class Cassandra(object):
                     sock.shutdown(socket.SHUT_RDWR)
                     sock.close()
                     break
-                except Exception as e:
+                except Exception:
                     pass
 
                 if os.waitpid(pid, os.WNOHANG) != (0, 0):
@@ -261,7 +261,7 @@ def find_cassandra_home():
             return [int(ver) for ver in m.groups()]
 
     # search newest cassandra-x.x.x directory
-    cassandra_dirs = [dir for dir in glob("/usr/local/*cassandra*")  if os.path.isdir(dir)]
+    cassandra_dirs = [dir for dir in glob("/usr/local/*cassandra*") if os.path.isdir(dir)]
     if cassandra_dirs:
         return sorted(cassandra_dirs, key=strip_version)[-1]
 

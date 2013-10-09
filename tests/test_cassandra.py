@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import signal
 import unittest
 import test.cassandra
@@ -67,6 +66,7 @@ class TestCassandra(unittest.TestCase):
         cassandra = test.cassandra.Cassandra()
         if os.fork() == 0:
             del cassandra
+            cassandra = None
             os.kill(os.getpid(), signal.SIGTERM)  # exit tests FORCELY
         else:
             os.wait()
