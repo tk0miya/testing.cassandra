@@ -42,6 +42,7 @@ class Cassandra(object):
         self.settings.update(kwargs)
         self.pid = None
         self._owner_pid = os.getpid()
+        self._use_tmpdir = False
 
         if self.base_dir:
             if self.base_dir[0] != '/':
