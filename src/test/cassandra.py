@@ -261,7 +261,7 @@ def find_cassandra_home():
             return [int(ver) for ver in m.groups()]
 
     # search newest cassandra-x.x.x directory
-    cassandra_dirs = glob("/usr/local/*cassandra*")
+    cassandra_dirs = [dir for dir in glob("/usr/local/*cassandra*")  if os.path.isdir(dir)]
     if cassandra_dirs:
         return sorted(cassandra_dirs, key=strip_version)[-1]
 
