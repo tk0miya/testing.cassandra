@@ -37,6 +37,7 @@ setup(
          test=[
              'Nose',
              'pep8',
+             'mock',
          ],
      ),
      test_suite='nose.collector',
