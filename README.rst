@@ -35,7 +35,7 @@ If you install cassandra to other directory, set ``cassandra_home`` keyword::
 ``test.cassandra.Cassandra`` executes ``cassandra`` on instantiation.
 On deleting Cassandra object, it terminates Cassandra instance and removes temporary directory.
 
-If you want database includes column families and any fixtures for your apps,
+If you want a database including column families and any fixtures for your apps,
 use ``copy_data_from`` keyword::
 
   # uses a copy of specified data directory of Cassandra.
