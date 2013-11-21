@@ -14,7 +14,7 @@ classifiers = [
 
 
 setup(
-    name='test.cassandra',
+    name='testing.cassandra',
     version='1.0.0',
     description='automatically setups a cassandra instance in a temporary directory, and destroys it after testing',
     long_description=open('README.rst').read(),
@@ -22,7 +22,7 @@ setup(
     keywords=[],
     author='Takeshi Komiya',
     author_email='i.tkomiya at gmail.com',
-    url='http://bitbucket.org/tk0miya/test.cassandra',
+    url='http://bitbucket.org/tk0miya/testing.cassandra',
     license='Apache License 2.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},
