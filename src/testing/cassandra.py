@@ -127,17 +127,28 @@ class Cassandra(object):
         orig_dir = os.path.join(self.cassandra_home, 'conf')
         conf_dir = os.path.join(self.base_dir, 'conf')
         for filename in os.listdir(os.path.join(orig_dir)):
-            if not os.path.exists(os.path.join(conf_dir, filename)):
-                copyfile(os.path.join(orig_dir, filename),
-                         os.path.join(conf_dir, filename))
+            srcpath = os.path.join(orig_dir, filename)
+            destpath = os.path.join(conf_dir, filename)
+            if not os.path.exists(destpath):
+                if filename == 'log4j-server.properties':
+                    logpath = os.path.join(self.base_dir, 'tmp', 'system.log')
+                    with open(srcpath) as src:
+                        with open(destpath, 'w') as dest:
+                            property = re.sub('log4j.appender.R.File=.*',
+                                              'log4j.appender.R.File=%s' % logpath,
+                                              src.read())
+                            dest.write(property)
+                else:
+                    copyfile(srcpath, destpath)
 
     def prestart(self):
         # assign ports to cassandra
-        ports = self.get_unused_ports(4)
-        jmx_port = ports[0]
-        self.settings['cassandra_yaml']['rpc_port'] = ports[1]
-        self.settings['cassandra_yaml']['storage_port'] = ports[2]
-        self.settings['cassandra_yaml']['ssl_storage_port'] = ports[3]
+        ports = self.get_unused_ports(5)
+        jmx_port = ports.pop()
+        config_keys = ['rpc_port', 'storage_port', 'ssl_storage_port', 'native_transport_port']
+        for key in config_keys:
+            if key in self.settings['cassandra_yaml']:
+                self.settings['cassandra_yaml'][key] = ports.pop()
 
         # replace cassandra-env.sh
         with open(os.path.join(self.base_dir, 'conf', 'cassandra-env.sh'), 'rt+') as fd:

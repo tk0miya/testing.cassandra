@@ -3,6 +3,7 @@
 import os
 import signal
 import unittest
+import subprocess
 import testing.cassandra
 from mock import patch
 from time import sleep
@@ -88,7 +89,14 @@ class TestCassandra(unittest.TestCase):
             os.kill(cassandra.pid, 0)  # process is alive (calling stop() in child is ignored)
 
     def test_copy_data_from(self):
-        data_dir = os.path.join(os.path.dirname(__file__), 'copy-data-from')
+        cassandra_home = testing.cassandra.find_cassandra_home()
+        args = [os.path.join(cassandra_home, 'bin', 'cassandra'), '-v']
+
+        stdout, _ = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        version = stdout.splitlines()[-1].strip()
+
+        # use copy-data-from/{version}
+        data_dir = os.path.join(os.path.dirname(__file__), 'copy-data-from/%s' % version[:3])
         cassandra = testing.cassandra.Cassandra(copy_data_from=data_dir)
 
         # connect to mysql
