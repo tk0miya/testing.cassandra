@@ -91,11 +91,6 @@ class Cassandra(object):
             self.stop()
             self.cleanup()
 
-    def cleanup(self):
-        from shutil import rmtree
-        if self._use_tmpdir:
-            rmtree(self.base_dir)
-
     def __getattr__(self, name):
         if name in self.settings:
             return self.settings[name]
@@ -109,6 +104,32 @@ class Cassandra(object):
     def server_list(self):
         hostname = '127.0.0.1:%d' % self.cassandra_yaml['rpc_port']
         return [hostname]
+
+    def setup(self):
+        # copy data files
+        if self.copy_data_from:
+            try:
+                datadir = os.path.join(self.base_dir, 'data')
+                copytree(self.copy_data_from, datadir)
+            except Exception as exc:
+                raise RuntimeError("could not copytree %s to %s: %r" %
+                                   (self.copy_data_from, datadir, exc))
+
+        # (re)create directory structure
+        for subdir in ['conf', 'commitlog', 'data', 'saved_caches', 'tmp']:
+            try:
+                path = os.path.join(self.base_dir, subdir)
+                os.makedirs(path)
+            except:
+                pass
+
+        # conf directory
+        orig_dir = os.path.join(self.cassandra_home, 'conf')
+        conf_dir = os.path.join(self.base_dir, 'conf')
+        for filename in os.listdir(os.path.join(orig_dir)):
+            if not os.path.exists(os.path.join(conf_dir, filename)):
+                copyfile(os.path.join(orig_dir, filename),
+                         os.path.join(conf_dir, filename))
 
     def prestart(self):
         # assign ports to cassandra
@@ -197,31 +218,10 @@ class Cassandra(object):
         except:
             pass
 
-    def setup(self):
-        # copy data files
-        if self.copy_data_from:
-            try:
-                datadir = os.path.join(self.base_dir, 'data')
-                copytree(self.copy_data_from, datadir)
-            except Exception as exc:
-                raise RuntimeError("could not copytree %s to %s: %r" %
-                                   (self.copy_data_from, datadir, exc))
-
-        # (re)create directory structure
-        for subdir in ['conf', 'commitlog', 'data', 'saved_caches', 'tmp']:
-            try:
-                path = os.path.join(self.base_dir, subdir)
-                os.makedirs(path)
-            except:
-                pass
-
-        # conf directory
-        orig_dir = os.path.join(self.cassandra_home, 'conf')
-        conf_dir = os.path.join(self.base_dir, 'conf')
-        for filename in os.listdir(os.path.join(orig_dir)):
-            if not os.path.exists(os.path.join(conf_dir, filename)):
-                copyfile(os.path.join(orig_dir, filename),
-                         os.path.join(conf_dir, filename))
+    def cleanup(self):
+        from shutil import rmtree
+        if self._use_tmpdir:
+            rmtree(self.base_dir)
 
     def read_log(self):
         try:
