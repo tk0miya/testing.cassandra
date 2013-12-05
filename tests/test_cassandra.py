@@ -57,7 +57,7 @@ class TestCassandra(unittest.TestCase):
         os.kill(cassandra2.pid, 0)  # process is alive
 
     @patch("testing.cassandra.os.listdir")
-    def testing(self, listdir):
+    def test_cassandra_is_not_found(self, listdir):
         listdir.return_value = []
         with self.assertRaises(RuntimeError):
             testing.cassandra.Cassandra()
@@ -96,3 +96,78 @@ class TestCassandra(unittest.TestCase):
         values = pycassa.ColumnFamily(conn, 'hello').get('score')
 
         self.assertEqual({'scott': '1', 'tiger': '2'}, values)
+
+    def test_skipIfNotInstalled_found(self):
+        @testing.cassandra.skipIfNotInstalled
+        def testcase():
+            pass
+
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip__'))
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip_why__'))
+
+    @patch("testing.cassandra.glob")
+    def test_skipIfNotInstalled_notfound(self, glob):
+        glob.side_effect = []
+
+        try:
+            search_paths = testing.cassandra.SEARCH_PATHS
+            testing.cassandra.SEARCH_PATHS = []
+
+            @testing.cassandra.skipIfNotInstalled
+            def testcase():
+                pass
+
+            self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
+            self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
+            self.assertEqual(True, testcase.__unittest_skip__)
+            self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+        finally:
+            testing.cassandra.SEARCH_PATHS = search_paths
+
+    def test_skipIfNotInstalled_with_args_found(self):
+        cassandra_home = testing.cassandra.find_cassandra_home()
+        path = os.path.join(cassandra_home, 'bin', 'cassandra')
+
+        @testing.cassandra.skipIfNotInstalled(path)
+        def testcase():
+            pass
+
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip__'))
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip_why__'))
+
+    def test_skipIfNotInstalled_with_args_notfound(self):
+        @testing.cassandra.skipIfNotInstalled("/path/to/anywhere")
+        def testcase():
+            pass
+
+        self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
+        self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
+        self.assertEqual(True, testcase.__unittest_skip__)
+        self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+
+    def test_skipIfNotFound_found(self):
+        @testing.cassandra.skipIfNotFound
+        def testcase():
+            pass
+
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip__'))
+        self.assertEqual(False, hasattr(testcase, '__unittest_skip_why__'))
+
+    @patch("testing.cassandra.glob")
+    def test_skipIfNotFound_notfound(self, glob):
+        glob.side_effect = []
+
+        try:
+            search_paths = testing.cassandra.SEARCH_PATHS
+            testing.cassandra.SEARCH_PATHS = []
+
+            @testing.cassandra.skipIfNotFound
+            def testcase():
+                pass
+
+            self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
+            self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
+            self.assertEqual(True, testcase.__unittest_skip__)
+            self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+        finally:
+            testing.cassandra.SEARCH_PATHS = search_paths

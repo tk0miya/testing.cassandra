@@ -26,7 +26,7 @@ from glob import glob
 from time import sleep
 from shutil import copyfile, copytree
 
-__all__ = ['Cassandra']
+__all__ = ['Cassandra', 'skipIfNotInstalled', 'skipIfNotFound']
 
 SEARCH_PATHS = ['/usr/local/cassandra', '/usr/local/apache-cassandra']
 DEFAULT_SETTINGS = dict(auto_start=2,
@@ -246,6 +246,33 @@ class Cassandra(object):
             sock.close()
 
         return ports
+
+
+def skipIfNotInstalled(arg=None):
+    if sys.version_info < (2, 7):
+        from unittest2 import skipIf
+    else:
+        from unittest import skipIf
+
+    def decorator(fn, path=arg):
+        if path:
+            cond = not os.path.exists(path)
+        else:
+            try:
+                find_cassandra_home()  # raise exception if not found
+                cond = False
+            except:
+                cond = True  # not found
+
+        return skipIf(cond, "Cassandra does not found")(fn)
+
+    if callable(arg):  # execute as simple decorator
+        return decorator(arg, None)
+    else:  # execute with path argument
+        return decorator
+
+
+skipIfNotFound = skipIfNotInstalled
 
 
 def find_cassandra_home():
