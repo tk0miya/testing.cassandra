@@ -78,6 +78,11 @@ Apache License 2.0
 History
 =======
 
+1.1.1 (2013-12-06)
+-------------------
+* Suport Cassandra 2.0.x
+* Fix Cassandra#stop() causes OSError (at destructing object)
+
 1.1.0 (2013-12-06)
 -------------------
 * Support Cassandra 1.2.x
