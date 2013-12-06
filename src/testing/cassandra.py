@@ -132,6 +132,8 @@ class Cassandra(object):
                                               'log4j.appender.R.File=%s' % logpath,
                                               src.read())
                             dest.write(property)
+                elif os.path.isdir(srcpath):
+                    copytree(srcpath, destpath)
                 else:
                     copyfile(srcpath, destpath)
 
