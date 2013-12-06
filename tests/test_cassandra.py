@@ -39,6 +39,31 @@ class TestCassandra(unittest.TestCase):
         with self.assertRaises(OSError):
             os.kill(pid, 0)  # process is down
 
+    def test_stop(self):
+        # start cassandra server
+        cassandra = testing.cassandra.Cassandra()
+        self.assertIsNotNone(cassandra.pid)
+        self.assertTrue(os.path.exists(cassandra.base_dir))
+        pid = cassandra.pid
+        os.kill(pid, 0)  # process is alive
+
+        # call stop()
+        cassandra.stop()
+        self.assertIsNone(cassandra.pid)
+        self.assertFalse(os.path.exists(cassandra.base_dir))
+        with self.assertRaises(OSError):
+            os.kill(pid, 0)  # process is down
+
+        # call stop() again
+        cassandra.stop()
+        self.assertIsNone(cassandra.pid)
+        self.assertFalse(os.path.exists(cassandra.base_dir))
+        with self.assertRaises(OSError):
+            os.kill(pid, 0)  # process is down
+
+        # delete cassandra object after stop()
+        del cassandra
+
     def test_with_cassandra(self):
         with testing.cassandra.Cassandra() as cassandra:
             self.assertIsNotNone(cassandra)
