@@ -60,7 +60,7 @@ For example, you can setup new Cassandra server for each testcases on setUp() me
 
 Requirements
 ============
-* Python 2.7
+* Python 2.6, 2.7
 * pycassa
 * PyYAML
 

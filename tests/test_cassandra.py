@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import signal
-import unittest
+import pycassa
 import subprocess
 import testing.cassandra
 from mock import patch
 from time import sleep
-import pycassa
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
 
 
 class TestCassandra(unittest.TestCase):
