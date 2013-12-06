@@ -78,7 +78,7 @@ class Cassandra(object):
 
     def __del__(self):
         import os
-        if self.pid and self._owner_pid == os.getpid():
+        if self._owner_pid == os.getpid():
             self.stop()
             self.cleanup()
 
@@ -87,7 +87,7 @@ class Cassandra(object):
 
     def __exit__(self, *args):
         import os
-        if self.pid and self._owner_pid == os.getpid():
+        if self._owner_pid == os.getpid():
             self.stop()
             self.cleanup()
 
@@ -230,6 +230,9 @@ class Cassandra(object):
             pass
 
     def cleanup(self):
+        if self.pid is not None:
+            return
+
         from shutil import rmtree
         if self._use_tmpdir:
             rmtree(self.base_dir)
