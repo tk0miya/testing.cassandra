@@ -13,16 +13,17 @@ Usage
 =====
 Create Cassandra instance using ``testing.cassandra.Cassandra``::
 
-  import testing.cassandra
-  cassandra = testing.cassandra.Cassandra()  # Lanuch new Cassandra server
-
   import pycassa
-  conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
-  #
-  # do any tests using Cassandra...
-  #
+  import testing.cassandra
 
-  del cassandra                           # Terminate Cassandra server
+  # Launch new Cassandra server
+  with testing.cassandra.Cassandra as cassandra:
+      conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
+      #
+      # do any tests using Cassandra...
+      #
+
+  # Cassandra server is terminated here
 
 
 ``testing.cassandra`` automatically searchs for cassandra files in ``/usr/local/``.
@@ -56,6 +57,9 @@ For example, you can setup new Cassandra server for each testcases on setUp() me
   class MyTestCase(unittest.TestCase):
       def setUp(self):
           self.cassandra = testing.cassandra.Cassandra()
+
+      def tearDown(self):
+          self.cassandra.stop()
 
 
 Requirements
