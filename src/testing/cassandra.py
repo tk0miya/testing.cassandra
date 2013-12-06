@@ -77,19 +77,13 @@ class Cassandra(object):
             self.start()
 
     def __del__(self):
-        import os
-        if self._owner_pid == os.getpid():
-            self.stop()
-            self.cleanup()
+        self.stop()
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        import os
-        if self._owner_pid == os.getpid():
-            self.stop()
-            self.cleanup()
+        self.stop()
 
     def __getattr__(self, name):
         if name in self.settings:
@@ -208,6 +202,11 @@ class Cassandra(object):
             conn.close()
 
     def stop(self, _signal=signal.SIGTERM):
+        if self._owner_pid == os.getpid():
+            self.terminate()
+            self.cleanup()
+
+    def terminate(self, _signal=signal.SIGTERM):
         import os
         if self.pid is None:
             return  # not started
