@@ -203,7 +203,7 @@ class Cassandra(object):
 
     def stop(self, _signal=signal.SIGTERM):
         if self._owner_pid == os.getpid():
-            self.terminate()
+            self.terminate(_signal)
             self.cleanup()
 
     def terminate(self, _signal=signal.SIGTERM):
