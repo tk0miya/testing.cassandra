@@ -64,6 +64,7 @@ For example, you can setup new Cassandra server for each testcases on setUp() me
 
 Requirements
 ============
+* Cassandra 1.1, 1.2
 * Python 2.6, 2.7
 * pycassa
 * PyYAML
@@ -76,6 +77,14 @@ Apache License 2.0
 
 History
 =======
+
+1.1.0 (2013-12-06)
+-------------------
+* Support Cassandra 1.2.x
+* Support python 2.6
+* Add mysqld.skipIfNotInstalled decorator
+* Change behavior: Cassandra#stop() cleans workdir
+* Fix workdir does not removed if cassandra does not started
 
 1.0.0 (2013-10-17)
 -------------------
