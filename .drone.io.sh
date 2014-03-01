@@ -44,15 +44,3 @@ sudo tar xf apache-cassandra-2.0.5-bin.tar.gz
 cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
 detox
 sudo rm -rf /usr/local/apache-cassandra-2.0.5
-
-
-##################
-# Cassandra 2.1.x
-##################
-cd /usr/local
-sudo curl -LO http://archive.apache.org/dist/cassandra/2.1.0/apache-cassandra-2.1.0-bin.tar.gz
-sudo tar xf apache-cassandra-2.1.0-bin.tar.gz
-
-cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
-detox
-sudo rm -rf /usr/local/apache-cassandra-2.1.0
