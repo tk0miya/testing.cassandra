@@ -19,7 +19,7 @@ cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
 pip install --use-mirrors --upgrade detox misspellings
 find src/ -name "*.py" | misspellings -f -
 detox
-rm -rf /usr/local/apache-cassandra-1.1.12
+sudo rm -rf /usr/local/apache-cassandra-1.1.12
 
 
 ##################
@@ -31,7 +31,7 @@ sudo tar xf apache-cassandra-1.2.15-bin.tar.gz
 
 cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
 detox
-rm -rf /usr/local/apache-cassandra-1.2.15
+sudo rm -rf /usr/local/apache-cassandra-1.2.15
 
 
 ##################
@@ -43,7 +43,7 @@ sudo tar xf apache-cassandra-2.0.5-bin.tar.gz
 
 cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
 detox
-rm -rf /usr/local/apache-cassandra-2.0.5
+sudo rm -rf /usr/local/apache-cassandra-2.0.5
 
 
 ##################
@@ -55,4 +55,4 @@ sudo tar xf apache-cassandra-2.1.0-bin.tar.gz
 
 cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
 detox
-rm -rf /usr/local/apache-cassandra-2.1.0
+sudo rm -rf /usr/local/apache-cassandra-2.1.0
