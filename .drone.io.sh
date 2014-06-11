@@ -16,7 +16,7 @@ sudo tar xf apache-cassandra-1.1.12-bin.tar.gz
 sudo sed -ie 's/-Xss180k/-Xss280k/' /usr/local/apache-cassandra-1.1.12/conf/cassandra-env.sh
 
 cd /home/ubuntu/src/bitbucket.org/tk0miya/testing.cassandra
-pip install --use-mirrors --upgrade detox misspellings
+pip install --use-mirrors --upgrade detox misspellings docutils
 find src/ -name "*.py" | misspellings -f -
 detox
 sudo rm -rf /usr/local/apache-cassandra-1.1.12
