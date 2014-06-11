@@ -90,6 +90,10 @@ Apache License 2.0
 History
 =======
 
+1.1.2 (2014-06-11)
+-------------------
+* Fix ImportError if caught SIGINT on py3
+
 1.1.1 (2013-12-06)
 -------------------
 * Suport Cassandra 2.0.x
