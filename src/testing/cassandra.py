@@ -24,7 +24,7 @@ import tempfile
 import subprocess
 from glob import glob
 from time import sleep
-from shutil import copyfile, copytree
+from shutil import copyfile, copytree, rmtree
 
 __all__ = ['Cassandra', 'skipIfNotInstalled', 'skipIfNotFound']
 
@@ -209,7 +209,6 @@ class Cassandra(object):
             self.cleanup()
 
     def terminate(self, _signal=signal.SIGTERM):
-        import os
         if self.pid is None:
             return  # not started
 
@@ -234,7 +233,6 @@ class Cassandra(object):
         if self.pid is not None:
             return
 
-        from shutil import rmtree
         if self._use_tmpdir and os.path.exists(self.base_dir):
             rmtree(self.base_dir)
 
