@@ -133,6 +133,10 @@ class TestCassandra(unittest.TestCase):
                 cf = pycassa.ColumnFamily(conn, 'hello')
                 cf.insert('score', {'scott': '1', 'tiger': '2'})
 
+            # flushing MemTable (commit log) to SSTable
+            with testing.cassandra.Cassandra(base_dir=tmpdir) as cassandra:
+                pass
+
             # create another database from first one
             data_dir = os.path.join(tmpdir, 'data')
             with testing.cassandra.Cassandra(copy_data_from=data_dir) as cassandra:
