@@ -126,8 +126,12 @@ class TestCassandra(unittest.TestCase):
             # create new database
             with testing.cassandra.Cassandra(base_dir=tmpdir) as cassandra:
                 conn = pycassa.system_manager.SystemManager(cassandra.server_list()[0])
-                conn.create_keyspace('test', pycassa.SIMPLE_STRATEGY, {'replication_factor': '1'})
+                conn.create_keyspace('hello', pycassa.SIMPLE_STRATEGY, {'replication_factor': '1'})
                 conn.close()
+
+                conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
+                cf = pycassa.ColumnFamily(conn, 'hello')
+                cf.insert('score', {'scott': '1', 'tiger': '2'})
 
             # create another database from first one
             data_dir = os.path.join(tmpdir, 'data')
