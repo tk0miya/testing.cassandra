@@ -4,10 +4,11 @@ import os
 import sys
 import signal
 import pycassa
-import subprocess
+import tempfile
 import testing.cassandra
 from mock import patch
 from time import sleep
+from shutil import rmtree
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -119,21 +120,24 @@ class TestCassandra(unittest.TestCase):
             os.kill(cassandra.pid, 0)  # process is alive (calling stop() in child is ignored)
 
     def test_copy_data_from(self):
-        cassandra_home = testing.cassandra.find_cassandra_home()
-        args = [os.path.join(cassandra_home, 'bin', 'cassandra'), '-v']
+        try:
+            tmpdir = tempfile.mkdtemp()
 
-        stdout, _ = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-        version = stdout.splitlines()[-1].strip()
+            # create new database
+            with testing.cassandra.Cassandra(base_dir=tmpdir) as cassandra:
+                conn = pycassa.system_manager.SystemManager(self.server_list()[0])
+                conn.create_keyspace('test', pycassa.SIMPLE_STRATEGY, {'replication_factor': '1'})
+                conn.close()
 
-        # use copy-data-from/{version}
-        data_dir = os.path.join(os.path.dirname(__file__), 'copy-data-from/%s' % version[:3])
-        cassandra = testing.cassandra.Cassandra(copy_data_from=data_dir)
+            # create another database from first one
+            data_dir = os.path.join(tmpdir, 'data')
+            with testing.cassandra.Cassandra(copy_data_from=data_dir) as cassandra:
+                conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
+                values = pycassa.ColumnFamily(conn, 'hello').get('score')
 
-        # connect to mysql
-        conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
-        values = pycassa.ColumnFamily(conn, 'hello').get('score')
-
-        self.assertEqual({'scott': '1', 'tiger': '2'}, values)
+                self.assertEqual({'scott': '1', 'tiger': '2'}, values)
+        finally:
+            rmtree(tmpdir)
 
     def test_skipIfNotInstalled_found(self):
         @testing.cassandra.skipIfNotInstalled
