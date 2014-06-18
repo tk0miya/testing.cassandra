@@ -125,7 +125,7 @@ class TestCassandra(unittest.TestCase):
 
             # create new database
             with testing.cassandra.Cassandra(base_dir=tmpdir) as cassandra:
-                conn = pycassa.system_manager.SystemManager(self.server_list()[0])
+                conn = pycassa.system_manager.SystemManager(cassandra.server_list()[0])
                 conn.create_keyspace('test', pycassa.SIMPLE_STRATEGY, {'replication_factor': '1'})
                 conn.close()
 
