@@ -25,6 +25,7 @@ import subprocess
 from glob import glob
 from time import sleep
 from shutil import copyfile, copytree, rmtree
+from datetime import datetime
 
 __all__ = ['Cassandra', 'skipIfNotInstalled', 'skipIfNotFound']
 
@@ -217,8 +218,13 @@ class Cassandra(object):
 
         try:
             os.kill(self.pid, _signal)
-            while (os.waitpid(self.pid, 0)):
-                pass
+            killed_at = datetime.now()
+            while (os.waitpid(self.pid, os.WNOHANG)):
+                if (datetime.now() - killed_at).seconds > 10.0:
+                    os.kill(self.pid, signal.SIGKILL)
+                    raise RuntimeError("*** failed to shutdown cassandra (timeout) ***\n" + self.read_log())
+
+                sleep(0.1)
         except:
             pass
 
