@@ -90,6 +90,11 @@ Apache License 2.0
 History
 =======
 
+1.1.3 (2014-06-19)
+-------------------
+* Add timeout on terminating cassandra
+* Fix bugs
+
 1.1.2 (2014-06-11)
 -------------------
 * Fix ImportError if caught SIGINT on py3
