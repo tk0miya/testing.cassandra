@@ -170,7 +170,7 @@ class TestCassandra(unittest.TestCase):
             self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
             self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
             self.assertEqual(True, testcase.__unittest_skip__)
-            self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+            self.assertEqual("Cassandra not found", testcase.__unittest_skip_why__)
         finally:
             testing.cassandra.SEARCH_PATHS = search_paths
 
@@ -193,7 +193,7 @@ class TestCassandra(unittest.TestCase):
         self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
         self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
         self.assertEqual(True, testcase.__unittest_skip__)
-        self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+        self.assertEqual("Cassandra not found", testcase.__unittest_skip_why__)
 
     def test_skipIfNotFound_found(self):
         @testing.cassandra.skipIfNotFound
@@ -218,6 +218,6 @@ class TestCassandra(unittest.TestCase):
             self.assertEqual(True, hasattr(testcase, '__unittest_skip__'))
             self.assertEqual(True, hasattr(testcase, '__unittest_skip_why__'))
             self.assertEqual(True, testcase.__unittest_skip__)
-            self.assertEqual("Cassandra does not found", testcase.__unittest_skip_why__)
+            self.assertEqual("Cassandra not found", testcase.__unittest_skip_why__)
         finally:
             testing.cassandra.SEARCH_PATHS = search_paths

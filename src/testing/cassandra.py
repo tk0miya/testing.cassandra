@@ -283,7 +283,7 @@ def skipIfNotInstalled(arg=None):
             except:
                 cond = True  # not found
 
-        return skipIf(cond, "Cassandra does not found")(fn)
+        return skipIf(cond, "Cassandra not found")(fn)
 
     if callable(arg):  # execute as simple decorator
         return decorator(arg, None)
