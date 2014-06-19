@@ -189,7 +189,7 @@ class Cassandra(object):
                 except Exception:
                     pass
 
-                if os.waitpid(pid, os.WNOHANG) != (0, 0):
+                if os.waitpid(pid, os.WNOHANG)[0] != 0:
                     raise RuntimeError("*** failed to launch cassandra ***\n" + self.read_log())
 
                 sleep(1)
