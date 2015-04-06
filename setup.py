@@ -24,7 +24,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='testing.cassandra',
-    version='1.1.3',
+    version='1.1.4',
     description='automatically setups a cassandra instance in a temporary directory, and destroys it after testing',
     long_description=open('README.rst').read(),
     classifiers=classifiers,

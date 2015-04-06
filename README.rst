@@ -90,6 +90,13 @@ Apache License 2.0
 History
 =======
 
+1.1.4 (2015-04-06)
+-------------------
+* Fix bugs:
+
+  - Do not call os.getpid() on destructor (if not needed)
+  - Use absolute path for which command
+
 1.1.3 (2014-06-19)
 -------------------
 * Add timeout on terminating cassandra
