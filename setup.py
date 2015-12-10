@@ -31,7 +31,7 @@ setup(
     keywords=[],
     author='Takeshi Komiya',
     author_email='i.tkomiya at gmail.com',
-    url='http://bitbucket.org/tk0miya/testing.cassandra',
+    url='https://github.com/tk0miya/testing.cassandra',
     license='Apache License 2.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},
