@@ -63,6 +63,7 @@ class Cassandra(object):
             self.settings['cassandra_yaml']['commitlog_directory'] = os.path.join(self.base_dir, 'commitlog')
             self.settings['cassandra_yaml']['data_file_directories'] = [os.path.join(self.base_dir, 'data')]
             self.settings['cassandra_yaml']['saved_caches_directory'] = os.path.join(self.base_dir, 'saved_caches')
+            self.settings['cassandra_yaml']['start_rpc'] = True
 
             if user_config:
                 for key, value in user_config.items():
