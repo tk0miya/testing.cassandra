@@ -9,6 +9,8 @@ env:
     - TOXENV=py27 CASSANDRA=1.1
     - TOXENV=py27 CASSANDRA=1.2
     - TOXENV=py27 CASSANDRA=2.0
+    - TOXENV=py27 CASSANDRA=2.1
+    - TOXENV=py27 CASSANDRA=2.2
 cache:
   directories:
     - $HOME/.cache/pip
@@ -17,5 +19,7 @@ before_install:
   - '[ "$CASSANDRA" = "1.1" ] && wget http://archive.apache.org/dist/cassandra/1.1.12/apache-cassandra-1.1.12-bin.tar.gz && tar -xvzf apache-cassandra-1.1.12-bin.tar.gz && sed -ie "s/-Xss180k/-Xss280k/" apache-cassandra-1.1.12/conf/cassandra-env.sh && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.1.12 || true'
   - '[ "$CASSANDRA" = "1.2" ] && wget http://archive.apache.org/dist/cassandra/1.2.19/apache-cassandra-1.2.19-bin.tar.gz && tar -xvzf apache-cassandra-1.2.19-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.2.19 || true'
   - '[ "$CASSANDRA" = "2.0" ] && wget http://archive.apache.org/dist/cassandra/2.0.16/apache-cassandra-2.0.16-bin.tar.gz && tar -xvzf apache-cassandra-2.0.16-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-2.0.16 || true'
+  - '[ "$CASSANDRA" = "2.1" ] && wget http://archive.apache.org/dist/cassandra/2.1.9/apache-cassandra-2.1.9-bin.tar.gz && tar -xvzf apache-cassandra-2.1.9-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-2.1.9 || true'
+  - '[ "$CASSANDRA" = "2.2" ] && wget http://archive.apache.org/dist/cassandra/2.2.1/apache-cassandra-2.2.1-bin.tar.gz && tar -xvzf apache-cassandra-2.2.1-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-2.2.1 || true'
 install: pip install docutils tox
 script: tox
