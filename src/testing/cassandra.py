@@ -149,7 +149,7 @@ class Cassandra(object):
                 self.settings['cassandra_yaml'][key] = ports.pop()
 
         # replace cassandra-env.sh
-        with open(os.path.join(self.base_dir, 'conf', 'cassandra-env.sh'), 'rt+') as fd:
+        with open(os.path.join(self.base_dir, 'conf', 'cassandra-env.sh'), 'r+t') as fd:
             script = re.sub('JMX_PORT="7199"', 'JMX_PORT="%d"' % jmx_port, fd.read())
             fd.seek(0)
             fd.write(script)
