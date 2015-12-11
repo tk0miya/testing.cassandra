@@ -294,6 +294,10 @@ skipIfNotFound = skipIfNotInstalled
 
 
 def find_cassandra_home():
+    cassandra_home = os.environ.get('CASSANDRA_HOME')
+    if cassandra_home and os.path.exists(os.path.join(cassandra_home, 'bin', 'cassandra')):
+        return cassandra_home
+
     for dir in SEARCH_PATHS:
         if os.path.exists(os.path.join(dir, 'bin', 'cassandra')):
             return dir

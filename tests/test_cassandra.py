@@ -88,11 +88,19 @@ class TestCassandra(unittest.TestCase):
         os.kill(cassandra1.pid, 0)  # process is alive
         os.kill(cassandra2.pid, 0)  # process is alive
 
-    @patch("testing.cassandra.os.listdir")
-    def test_cassandra_is_not_found(self, listdir):
-        listdir.return_value = []
-        with self.assertRaises(RuntimeError):
-            testing.cassandra.Cassandra()
+    @patch("testing.cassandra.glob")
+    def test_cassandra_is_not_found(self, glob):
+        try:
+            cassandra_home = os.environ.pop('CASSANDRA_HOME', None)
+            search_paths = testing.cassandra.SEARCH_PATHS
+            testing.cassandra.SEARCH_PATHS = []
+
+            with self.assertRaises(RuntimeError):
+                testing.cassandra.Cassandra()
+        finally:
+            testing.cassandra.SEARCH_PATHS = search_paths
+            if cassandra_home:
+                os.environ['CASSANDRA_HOME'] = cassandra_home
 
     def test_fork(self):
         cassandra = testing.cassandra.Cassandra()
@@ -160,6 +168,7 @@ class TestCassandra(unittest.TestCase):
         glob.side_effect = []
 
         try:
+            cassandra_home = os.environ.pop('CASSANDRA_HOME', None)
             search_paths = testing.cassandra.SEARCH_PATHS
             testing.cassandra.SEARCH_PATHS = []
 
@@ -173,6 +182,8 @@ class TestCassandra(unittest.TestCase):
             self.assertEqual("Cassandra not found", testcase.__unittest_skip_why__)
         finally:
             testing.cassandra.SEARCH_PATHS = search_paths
+            if cassandra_home:
+                os.environ['CASSANDRA_HOME'] = cassandra_home
 
     def test_skipIfNotInstalled_with_args_found(self):
         cassandra_home = testing.cassandra.find_cassandra_home()
@@ -208,6 +219,7 @@ class TestCassandra(unittest.TestCase):
         glob.side_effect = []
 
         try:
+            cassandra_home = os.environ.pop('CASSANDRA_HOME', None)
             search_paths = testing.cassandra.SEARCH_PATHS
             testing.cassandra.SEARCH_PATHS = []
 
@@ -221,3 +233,5 @@ class TestCassandra(unittest.TestCase):
             self.assertEqual("Cassandra not found", testcase.__unittest_skip_why__)
         finally:
             testing.cassandra.SEARCH_PATHS = search_paths
+            if cassandra_home:
+                os.environ['CASSANDRA_HOME'] = cassandra_home
