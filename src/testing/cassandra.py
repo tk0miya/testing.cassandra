@@ -184,6 +184,7 @@ class Cassandra(object):
         else:
             logger.close()
 
+            exec_at = datetime.now()
             while True:
                 try:
                     sock = socket.create_connection(('127.0.0.1', self.cassandra_yaml['rpc_port']), 1.0)
@@ -196,7 +197,10 @@ class Cassandra(object):
                 if os.waitpid(pid, os.WNOHANG)[0] != 0:
                     raise RuntimeError("*** failed to launch cassandra ***\n" + self.read_log())
 
-                sleep(1)
+                if (datetime.now() - exec_at).seconds > 10.0:
+                    raise RuntimeError("*** failed to launch cassandra (timeout) ***\n" + self.read_log())
+
+                sleep(0.1)
 
             self.pid = pid
 
