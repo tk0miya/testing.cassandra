@@ -1,16 +1,13 @@
 ``testing.cassandra`` automatically setups a cassandra instance in a temporary directory, and destroys it after testing
 
-.. image:: https://drone.io/bitbucket.org/tk0miya/testing.cassandra/status.png
-   :target: https://drone.io/bitbucket.org/tk0miya/testing.cassandra
-   :alt: drone.io CI build status
+.. image:: https://travis-ci.org/tk0miya/testing.cassandra.svg?branch=master
+   :target: https://travis-ci.org/tk0miya/testing.cassandra
 
-.. image:: https://pypip.in/v/testing.cassandra/badge.png
-   :target: https://pypi.python.org/pypi/testing.cassandra/
-   :alt: Latest PyPI version
+.. image:: https://coveralls.io/repos/tk0miya/testing.cassandra/badge.png?branch=master
+   :target: https://coveralls.io/r/tk0miya/testing.cassandra?branch=master
 
-.. image:: https://pypip.in/d/testing.cassandra/badge.png
-   :target: https://pypi.python.org/pypi/testing.cassandra/
-   :alt: Number of PyPI downloads
+.. image:: https://codeclimate.com/github/tk0miya/testing.cassandra/badges/gpa.svg
+   :target: https://codeclimate.com/github/tk0miya/testing.cassandra
 
 Install
 =======
