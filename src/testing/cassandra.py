@@ -63,7 +63,10 @@ class Cassandra(object):
             self.settings['cassandra_yaml']['commitlog_directory'] = os.path.join(self.base_dir, 'commitlog')
             self.settings['cassandra_yaml']['data_file_directories'] = [os.path.join(self.base_dir, 'data')]
             self.settings['cassandra_yaml']['saved_caches_directory'] = os.path.join(self.base_dir, 'saved_caches')
-            self.settings['cassandra_yaml']['start_rpc'] = True
+
+            cassandra_version = strip_version(self.cassandra_home)
+            if cassandra_version is None or cassandra_version > (1, 2):
+                self.settings['cassandra_yaml']['start_rpc'] = True
 
             if user_config:
                 for key, value in user_config.items():
@@ -294,6 +297,14 @@ def skipIfNotInstalled(arg=None):
 skipIfNotFound = skipIfNotInstalled
 
 
+def strip_version(dir):
+    m = re.search('(\d+)\.(\d+)\.(\d+)', dir)
+    if m is None:
+        return None
+    else:
+        return tuple([int(ver) for ver in m.groups()])
+
+
 def find_cassandra_home():
     cassandra_home = os.environ.get('CASSANDRA_HOME')
     if cassandra_home and os.path.exists(os.path.join(cassandra_home, 'bin', 'cassandra')):
@@ -302,13 +313,6 @@ def find_cassandra_home():
     for dir in SEARCH_PATHS:
         if os.path.exists(os.path.join(dir, 'bin', 'cassandra')):
             return dir
-
-    def strip_version(dir):
-        m = re.search('(\d+)\.(\d+)\.(\d+)', dir)
-        if m is None:
-            return None
-        else:
-            return [int(ver) for ver in m.groups()]
 
     # search newest cassandra-x.x.x directory
     cassandra_dirs = [dir for dir in glob("/usr/local/*cassandra*") if os.path.isdir(dir)]
