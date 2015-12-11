@@ -14,8 +14,8 @@ cache:
     - $HOME/.cache/pip
 before_install:
   # Increse stack-size: http://stackoverflow.com/questions/11901421/cannot-start-cassandra-db-using-bin-cassandra
-  - '[ "$CASSANDRA" = "1.1" ] && wget http://archive.apache.org/dist/cassandra/1.1.12/apache-cassandra-1.1.12-bin.tar.gz && tar -xvzf apache-cassandra-1.1.12-bin.tar.gz && sed -ie "s/-Xss180k/-Xss280k/" apache-cassandra-1.1.12/conf/cassandra-env.sh && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.1.12 && sudo sh apache-cassandra-1.1.12/bin/cassandra || true'
-  - '[ "$CASSANDRA" = "1.2" ] && wget http://archive.apache.org/dist/cassandra/1.2.19/apache-cassandra-1.2.19-bin.tar.gz && tar -xvzf apache-cassandra-1.2.19-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.2.19 && sudo sh apache-cassandra-1.2.19/bin/cassandra || true'
-  - '[ "$CASSANDRA" = "2.0" ] && wget http://archive.apache.org/dist/cassandra/2.0.16/apache-cassandra-2.0.16-bin.tar.gz && tar -xvzf apache-cassandra-2.0.16-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-2.0.16 && sudo sh apache-cassandra-2.0.16/bin/cassandra || true'
+  - '[ "$CASSANDRA" = "1.1" ] && wget http://archive.apache.org/dist/cassandra/1.1.12/apache-cassandra-1.1.12-bin.tar.gz && tar -xvzf apache-cassandra-1.1.12-bin.tar.gz && sed -ie "s/-Xss180k/-Xss280k/" apache-cassandra-1.1.12/conf/cassandra-env.sh && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.1.12 || true'
+  - '[ "$CASSANDRA" = "1.2" ] && wget http://archive.apache.org/dist/cassandra/1.2.19/apache-cassandra-1.2.19-bin.tar.gz && tar -xvzf apache-cassandra-1.2.19-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-1.2.19 || true'
+  - '[ "$CASSANDRA" = "2.0" ] && wget http://archive.apache.org/dist/cassandra/2.0.16/apache-cassandra-2.0.16-bin.tar.gz && tar -xvzf apache-cassandra-2.0.16-bin.tar.gz && export CASSANDRA_HOME=`pwd`/apache-cassandra-2.0.16 || true'
 install: pip install docutils tox
 script: tox
