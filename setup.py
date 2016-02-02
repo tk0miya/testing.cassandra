@@ -17,6 +17,7 @@ classifiers = [
 install_requires = [
     'pycassa',
     'PyYAML',
+    'testing.common.database',
 ]
 if sys.version_info < (2, 7):
     install_requires.append('unittest2')
@@ -49,4 +50,5 @@ setup(
         'mock',
         'nose',
     ],
+    namespace_packages=['testing'],
 )
