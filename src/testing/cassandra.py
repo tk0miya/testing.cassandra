@@ -29,7 +29,7 @@ from datetime import datetime
 
 __all__ = ['Cassandra', 'skipIfNotInstalled', 'skipIfNotFound']
 
-SEARCH_PATHS = ['/usr/local/cassandra', '/usr/local/apache-cassandra']
+SEARCH_PATHS = ['/usr/local/cassandra', '/usr/local/apache-cassandra', '/usr/local/opt/cassandra']
 DEFAULT_SETTINGS = dict(auto_start=2,
                         base_dir=None,
                         cassandra_home=None,
@@ -58,7 +58,7 @@ class Cassandra(object):
         self.settings.setdefault('cassandra_bin', os.path.join(self.cassandra_home, 'bin', 'cassandra'))
 
         user_config = self.settings.get('cassandra_yaml')
-        with open(os.path.join(self.cassandra_home, 'conf', 'cassandra.yaml')) as fd:
+        with open(os.path.join(self.cassandra_confdir, 'cassandra.yaml')) as fd:
             self.settings['cassandra_yaml'] = yaml.load(fd.read())
             self.settings['cassandra_yaml']['commitlog_directory'] = os.path.join(self.base_dir, 'commitlog')
             self.settings['cassandra_yaml']['data_file_directories'] = [os.path.join(self.base_dir, 'data')]
@@ -100,6 +100,16 @@ class Cassandra(object):
     def pid_file(self):
         return os.path.join(self.base_dir, 'tmp', 'cassandra.pid')
 
+    @property
+    def cassandra_confdir(self):
+        path = os.path.join(self.cassandra_home, 'conf')
+        if os.path.exists(path):
+            return path
+        elif os.path.exists('/usr/local/etc/cassandra'):  # Homebrew
+            return '/usr/local/etc/cassandra'
+        else:
+            raise RuntimeError("could not find confdir of cassandra")
+
     def server_list(self):
         hostname = '127.0.0.1:%d' % self.cassandra_yaml['rpc_port']
         return [hostname]
@@ -123,7 +133,7 @@ class Cassandra(object):
                 pass
 
         # conf directory
-        orig_dir = os.path.join(self.cassandra_home, 'conf')
+        orig_dir = os.path.join(self.cassandra_confdir)
         conf_dir = os.path.join(self.base_dir, 'conf')
         for filename in os.listdir(os.path.join(orig_dir)):
             srcpath = os.path.join(orig_dir, filename)
