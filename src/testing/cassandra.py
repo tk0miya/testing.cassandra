@@ -62,15 +62,9 @@ class Cassandra(Database):
             for key, value in self.settings.get('cassandra_yaml', {}):
                 self.settings['cassandra_yaml'][key] = value
 
-        if self.auto_start:
+        if self.settings['auto_start']:
             if os.path.exists(self.pid_file):
                 raise RuntimeError('cassandra is already running (%s)' % self.pid_file)
-
-    def __getattr__(self, name):
-        if name in self.settings:
-            return self.settings[name]
-        else:
-            raise AttributeError("'Cassandra' object has no attribute '%s'" % name)
 
     @property
     def pid_file(self):
