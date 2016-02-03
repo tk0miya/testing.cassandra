@@ -87,6 +87,14 @@ Apache License 2.0
 History
 =======
 
+1.2.0 (2016-02-03)
+-------------------
+* Add timeout to server invoker
+* Support Homebrew
+* Support Cassandra 2.x
+* Refer $CASSANDRA_HOME for search cassandra home directory
+* Depend on ``testing.common.database`` package
+
 1.1.4 (2015-04-06)
 -------------------
 * Fix bugs:
