@@ -89,10 +89,9 @@ class Cassandra(Database):
 
     def initialize_database(self):
         # conf directory
-        orig_dir = os.path.join(self.cassandra_confdir)
         conf_dir = os.path.join(self.base_dir, 'conf')
-        for filename in os.listdir(os.path.join(orig_dir)):
-            srcpath = os.path.join(orig_dir, filename)
+        for filename in os.listdir(self.cassandra_confdir):
+            srcpath = os.path.join(self.cassandra_confdir, filename)
             destpath = os.path.join(conf_dir, filename)
             if not os.path.exists(destpath):
                 if filename == 'log4j-server.properties':
