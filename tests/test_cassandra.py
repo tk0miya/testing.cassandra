@@ -29,38 +29,31 @@ class TestCassandra(unittest.TestCase):
         self.assertIsNotNone(conn)
 
         # shutting down
-        pid = cassandra.pid
-        self.assertTrue(pid)
-        os.kill(pid, 0)  # process is alive
+        pid = cassandra.server_pid
+        self.assertTrue(cassandra.is_alive())
 
         cassandra.stop()
         sleep(1)
 
-        self.assertIsNone(cassandra.pid)
+        self.assertFalse(cassandra.is_alive())
         with self.assertRaises(OSError):
             os.kill(pid, 0)  # process is down
 
     def test_stop(self):
         # start cassandra server
         cassandra = testing.cassandra.Cassandra()
-        self.assertIsNotNone(cassandra.pid)
         self.assertTrue(os.path.exists(cassandra.base_dir))
-        pid = cassandra.pid
-        os.kill(pid, 0)  # process is alive
+        self.assertTrue(cassandra.is_alive())
 
         # call stop()
         cassandra.stop()
-        self.assertIsNone(cassandra.pid)
         self.assertFalse(os.path.exists(cassandra.base_dir))
-        with self.assertRaises(OSError):
-            os.kill(pid, 0)  # process is down
+        self.assertFalse(cassandra.is_alive())
 
         # call stop() again
         cassandra.stop()
-        self.assertIsNone(cassandra.pid)
         self.assertFalse(os.path.exists(cassandra.base_dir))
-        with self.assertRaises(OSError):
-            os.kill(pid, 0)  # process is down
+        self.assertFalse(cassandra.is_alive())
 
         # delete cassandra object after stop()
         del cassandra
@@ -72,21 +65,17 @@ class TestCassandra(unittest.TestCase):
             # connect to cassandra
             conn = pycassa.pool.ConnectionPool('test', cassandra.server_list())
             self.assertIsNotNone(conn)
+            self.assertTrue(cassandra.is_alive())
 
-            pid = cassandra.pid
-            os.kill(pid, 0)  # process is alive
-
-        self.assertIsNone(cassandra.pid)
-        with self.assertRaises(OSError):
-            os.kill(pid, 0)  # process is down
+        self.assertFalse(cassandra.is_alive())
 
     def test_multiple_cassandra(self):
         cassandra1 = testing.cassandra.Cassandra()
         cassandra2 = testing.cassandra.Cassandra()
-        self.assertNotEqual(cassandra1.pid, cassandra2.pid)
+        self.assertNotEqual(cassandra1.server_pid, cassandra2.server_pid)
 
-        os.kill(cassandra1.pid, 0)  # process is alive
-        os.kill(cassandra2.pid, 0)  # process is alive
+        self.assertTrue(cassandra1.is_alive())
+        self.assertTrue(cassandra2.is_alive())
 
     @patch("testing.cassandra.find_cassandra_home")
     def test_cassandra_is_not_found(self, find_cassandra_home):
@@ -104,21 +93,18 @@ class TestCassandra(unittest.TestCase):
         else:
             os.wait()
             sleep(1)
-            self.assertTrue(cassandra.pid)
-            os.kill(cassandra.pid, 0)  # process is alive (delete mysqld obj in child does not effect)
+            self.assertTrue(cassandra.is_alive())  # process is alive (delete mysqld obj in child does not effect)
 
     def test_stop_on_child_process(self):
         cassandra = testing.cassandra.Cassandra()
         if os.fork() == 0:
             cassandra.stop()
-            self.assertTrue(cassandra.pid)
-            os.kill(cassandra.pid, 0)  # process is alive (calling stop() is ignored)
+            os.kill(cassandra.server_pid, 0)  # process is alive (calling stop() is ignored)
             os.kill(os.getpid(), signal.SIGTERM)  # exit tests FORCELY
         else:
             os.wait()
             sleep(1)
-            self.assertTrue(cassandra.pid)
-            os.kill(cassandra.pid, 0)  # process is alive (calling stop() in child is ignored)
+            self.assertTrue(cassandra.is_alive())  # process is alive (calling stop() in child is ignored)
 
     def test_copy_data_from(self):
         try:

@@ -17,7 +17,7 @@ classifiers = [
 install_requires = [
     'pycassa',
     'PyYAML',
-    'testing.common.database',
+    'testing.common.database >= 1.1.0',
 ]
 if sys.version_info < (2, 7):
     install_requires.append('unittest2')
